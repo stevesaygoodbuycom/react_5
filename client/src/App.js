@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import Customer from "./components/Customer";
-import { Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core/'
+import { Table, TableHead, TableBody, TableRow, TableCell, CircularProgress } from '@material-ui/core/'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper } from '@material-ui/core/'
 
@@ -13,6 +13,9 @@ const styles = theme => ({
 	},
 	table: {
 		minWidth: '1000px'
+	},
+	progress: {
+		margin: theme.spacing.uint * 3,
 	}
 })
 const customers = fetch('http://localhost:500/api/getCustomers');
@@ -21,11 +24,13 @@ class App extends Component{
 	constructor(props) {
 		super(props);
 		this.state = {
-			customers: []
+			customers: null,
+			progressCount: 0
 		}
 	}
 
 	componentDidMount() {
+		this.timer = setInterval(this.progress, 20);
 		this.callApi()
 			.then(res => {
 				this.setState({customers: res})
@@ -39,6 +44,11 @@ class App extends Component{
 
 	callApi = async () => {
 		return await fetch('/api/getCustomers').then(data => data.json());
+	}
+
+	progress = () => {
+		const { progressCount } = this.state;
+		this.setState({ completed: progressCount >= 100 ? 0 : progressCount + 1});
 	}
 
 	render() {
@@ -55,9 +65,14 @@ class App extends Component{
 					</TableHead>
 					<TableBody>
 						{
-							this.state.customers && this.state.customers.map(obj => {
+							this.state.customers ? this.state.customers.map(obj => {
 								return <Customer key={obj.id} customer={obj}/>
-							})
+							}) :
+								<TableRow>
+									<TableCell colSpan="6" align="center">
+										<CircularProgress className={styles.progress} variant="determinate" value={this.state.progressCount}/>
+									</TableCell>
+								</TableRow>
 						}
 					</TableBody>
 				</Table>
