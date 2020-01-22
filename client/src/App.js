@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import './App.css';
 import Customer from "./components/Customer";
 import { Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core/'
@@ -15,55 +15,55 @@ const styles = theme => ({
 		minWidth: '1000px'
 	}
 })
-const customers = [
-	{
-		id:1,
-		image: 'https://placeimg.com/64/64/1',
-		name: '유성호1',
-		birth: '1973-02-08',
-		gender: '남자',
-		job: '부사장'
-	},
-	{
-		id:2,
-		image: 'https://placeimg.com/64/64/2',
-		name: '유성호2',
-		birth: '1973-02-08',
-		gender: '남자',
-		job: '부사장'
-	},
-	{
-		id:3,
-		image: 'https://placeimg.com/64/64/3',
-		name: '유성호3',
-		birth: '1973-02-08',
-		gender: '남자',
-		job: '부사장'
-	},
-]
+const customers = fetch('http://localhost:500/api/getCustomers');
 
-function App() {
-  return (
-  	<Paper className={styles.root}>
-			<Table className={styles.table}>
-				<TableHead>
-					<TableCell>번호</TableCell>
-					<TableCell>이미지</TableCell>
-					<TableCell>이름</TableCell>
-					<TableCell>생년월일</TableCell>
-					<TableCell>성별</TableCell>
-					<TableCell>직업</TableCell>
-				</TableHead>
-				<TableBody>
-				{
-					customers.map(obj => {
-						return <Customer key={obj.id} customer={obj}/>
-					})
-				}
-				</TableBody>
-			</Table>
-		</Paper>
-  );
+class App extends Component{
+	constructor(props) {
+		super(props);
+		this.state = {
+			customers: []
+		}
+	}
+
+	componentDidMount() {
+		this.callApi()
+			.then(res => {
+				this.setState({customers: res})
+			})
+			.catch(err => {
+				console.error('333333333333333333333333333333333333')
+				console.error(err)
+				console.error('333333333333333333333333333333333333')
+			});
+	}
+
+	callApi = async () => {
+		return await fetch('/api/getCustomers').then(data => data.json());
+	}
+
+	render() {
+		return (
+			<Paper className={styles.root}>
+				<Table className={styles.table}>
+					<TableHead>
+						<TableCell>번호</TableCell>
+						<TableCell>이미지</TableCell>
+						<TableCell>이름</TableCell>
+						<TableCell>생년월일</TableCell>
+						<TableCell>성별</TableCell>
+						<TableCell>직업</TableCell>
+					</TableHead>
+					<TableBody>
+						{
+							this.state.customers && this.state.customers.map(obj => {
+								return <Customer key={obj.id} customer={obj}/>
+							})
+						}
+					</TableBody>
+				</Table>
+			</Paper>
+		);
+	}
 }
 
 export default withStyles(styles)(App);
