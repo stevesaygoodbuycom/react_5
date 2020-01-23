@@ -3,22 +3,82 @@ import './App.css';
 import Customer from "./components/Customer";
 import CustomerAdd from "./components/CustomerAdd";
 import { Table, TableHead, TableBody, TableRow, TableCell, CircularProgress } from '@material-ui/core/'
-import { withStyles } from '@material-ui/core/styles'
 import { Paper } from '@material-ui/core/'
-import {post} from "axios";
+
+import {AppBar, Toolbar, IconButton, Typography, InputBase} from "@material-ui/core";
+import { fade, makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles'
+import MenuIcon from "@material-ui/icons/Menu";
+import SearchIcon from "@material-ui/icons/Search";
 
 const styles = theme => ({
 	root: {
 		width: '100%',
-		marginTop: theme.spacing.unit * 3,
-		overflowX: 'auto',
+		minWidth: 1080
 	},
-	table: {
-		minWidth: '1000px'
+	paper: {
+		marginLeft: 18,
+		marginRight: 18,
+	},
+	tableHead: {
+		fontSize: 18
+	},
+	menu: {
+		marginTop: 15,
+		marginBottom: 15,
+		display: 'flex',
+		justifyContent: 'center'
 	},
 	progress: {
 		margin: theme.spacing.uint * 3,
-	}
+	},
+	menuButton: {
+		marginRight: theme.spacing(2),
+	},
+	title: {
+		flexGrow: 1,
+		display: 'none',
+		[theme.breakpoints.up('sm')]: {
+			display: 'block',
+		},
+	},
+	search: {
+		position: 'relative',
+		borderRadius: theme.shape.borderRadius,
+		backgroundColor: fade(theme.palette.common.white, 0.15),
+		'&:hover': {
+			backgroundColor: fade(theme.palette.common.white, 0.25),
+		},
+		marginLeft: 0,
+		width: '100%',
+		[theme.breakpoints.up('sm')]: {
+			marginLeft: theme.spacing(1),
+			width: 'auto',
+		},
+	},
+	searchIcon: {
+		width: theme.spacing(7),
+		height: '100%',
+		position: 'absolute',
+		pointerEvents: 'none',
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	inputRoot: {
+		color: 'inherit',
+	},
+	inputInput: {
+		padding: theme.spacing(1, 1, 1, 7),
+		transition: theme.transitions.create('width'),
+		width: '100%',
+		[theme.breakpoints.up('sm')]: {
+			width: 120,
+			'&:focus': {
+				width: 200,
+			},
+		},
+	},
 })
 
 class App extends Component{
@@ -63,18 +123,47 @@ class App extends Component{
 		);
 	}
 	render() {
+		const { classes } = this.props;
+		const cellList = ["번호", "이미지", "이름", "생년월일", "성별", "직업", "설정"];
 		return (
-			<div>
-				<Paper className={styles.root}>
-					<Table className={styles.table}>
+			<div className={classes.root}>
+				<AppBar position="static">
+					<Toolbar>
+						<IconButton
+							edge="start"
+							className={classes.menuButton}
+							color="inherit"
+							aria-label="open drawer"
+						>
+							<MenuIcon />
+						</IconButton>
+						<Typography className={classes.title} variant="h6" noWrap>
+							고객 관리 시스템
+						</Typography>
+						<div className={classes.search}>
+							<div className={classes.searchIcon}>
+								<SearchIcon />
+							</div>
+							<InputBase
+								placeholder="Search…"
+								classes={{
+									root: classes.inputRoot,
+									input: classes.inputInput,
+								}}
+								inputProps={{ 'aria-label': 'search' }}
+							/>
+						</div>
+					</Toolbar>
+				</AppBar>
+				<div className={classes.menu}>
+					<CustomerAdd refreshData={this.refreshData}/>
+				</div>
+				<Paper className={classes.paper}>
+					<Table className={classes.table}>
 						<TableHead>
-							<TableCell>번호</TableCell>
-							<TableCell>이미지</TableCell>
-							<TableCell>이름</TableCell>
-							<TableCell>생년월일</TableCell>
-							<TableCell>성별</TableCell>
-							<TableCell>직업</TableCell>
-							<TableCell>삭제</TableCell>
+							{
+								cellList.map((data) => <TableCell className={classes.tableHead}>{data}</TableCell>)
+							}
 						</TableHead>
 						<TableBody>
 							{
@@ -90,7 +179,6 @@ class App extends Component{
 						</TableBody>
 					</Table>
 				</Paper>
-				<CustomerAdd refreshData={this.refreshData}/>
 			</div>
 		);
 	}
