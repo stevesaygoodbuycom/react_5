@@ -6,7 +6,7 @@ class Customer extends Component {
 		return (
 			<TableRow>
 				<TableCell>{this.props.customer.id}</TableCell>
-				<TableCell><img src={this.props.customer.image} alt="profile"/></TableCell>
+				<TableCell><img src={this.props.customer.image} alt="profile" style={{width:60}}/></TableCell>
 				<TableCell>{this.props.customer.name}</TableCell>
 				<TableCell>{this.props.customer.birthday}</TableCell>
 				<TableCell>{this.props.customer.gender}</TableCell>

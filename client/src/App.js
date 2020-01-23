@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import Customer from "./components/Customer";
+import CustomerAdd from "./components/CustomerAdd";
 import { Table, TableHead, TableBody, TableRow, TableCell, CircularProgress } from '@material-ui/core/'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper } from '@material-ui/core/'
@@ -30,6 +31,10 @@ class App extends Component{
 
 	componentDidMount() {
 		this.timer = setInterval(this.progress, 20);
+		this.refreshData();
+	}
+
+	refreshData = () => {
 		this.callApi()
 			.then(res => {
 				this.setState({customers: res})
@@ -51,30 +56,33 @@ class App extends Component{
 	}
 	render() {
 		return (
-			<Paper className={styles.root}>
-				<Table className={styles.table}>
-					<TableHead>
-						<TableCell>번호</TableCell>
-						<TableCell>이미지</TableCell>
-						<TableCell>이름</TableCell>
-						<TableCell>생년월일</TableCell>
-						<TableCell>성별</TableCell>
-						<TableCell>직업</TableCell>
-					</TableHead>
-					<TableBody>
-						{
-							this.state.customers ? this.state.customers.map(obj => {
-								return <Customer key={obj.id} customer={obj}/>
-							}) :
-								<TableRow>
-									<TableCell colSpan="6" align="center">
-										<CircularProgress className={styles.progress} variant="determinate" value={this.state.progressCount}/>
-									</TableCell>
-								</TableRow>
-						}
-					</TableBody>
-				</Table>
-			</Paper>
+			<div>
+				<Paper className={styles.root}>
+					<Table className={styles.table}>
+						<TableHead>
+							<TableCell>번호</TableCell>
+							<TableCell>이미지</TableCell>
+							<TableCell>이름</TableCell>
+							<TableCell>생년월일</TableCell>
+							<TableCell>성별</TableCell>
+							<TableCell>직업</TableCell>
+						</TableHead>
+						<TableBody>
+							{
+								this.state.customers ? this.state.customers.map(obj => {
+									return <Customer key={obj.id} customer={obj}/>
+								}) :
+									<TableRow>
+										<TableCell colSpan="6" align="center">
+											<CircularProgress className={styles.progress} variant="determinate" value={this.state.progressCount}/>
+										</TableCell>
+									</TableRow>
+							}
+						</TableBody>
+					</Table>
+				</Paper>
+				<CustomerAdd refreshData={this.refreshData}/>
+			</div>
 		);
 	}
 }
