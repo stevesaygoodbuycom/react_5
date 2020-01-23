@@ -11,6 +11,7 @@ class Customer extends Component {
 				<TableCell>{this.props.customer.birthday}</TableCell>
 				<TableCell>{this.props.customer.gender}</TableCell>
 				<TableCell>{this.props.customer.job}</TableCell>
+				<TableCell><button onClick={() => {this.props.deleteCustomer(this.props.customer.id)}}>삭제</button></TableCell>
 			</TableRow>
 		);
 	}

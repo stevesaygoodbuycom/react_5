@@ -5,6 +5,7 @@ import CustomerAdd from "./components/CustomerAdd";
 import { Table, TableHead, TableBody, TableRow, TableCell, CircularProgress } from '@material-ui/core/'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper } from '@material-ui/core/'
+import {post} from "axios";
 
 const styles = theme => ({
 	root: {
@@ -54,6 +55,15 @@ class App extends Component{
 		const { progressCount } = this.state;
 		this.setState({ completed: progressCount >= 100 ? 0 : progressCount + 1});
 	}
+
+	deleteCustomer = (id) => {
+		const url = '/api/customers/' + id;
+		fetch(url, {
+			method: 'DELETE'
+		}).then(
+			this.refreshData()
+		);
+	}
 	render() {
 		return (
 			<div>
@@ -66,11 +76,12 @@ class App extends Component{
 							<TableCell>생년월일</TableCell>
 							<TableCell>성별</TableCell>
 							<TableCell>직업</TableCell>
+							<TableCell>삭제</TableCell>
 						</TableHead>
 						<TableBody>
 							{
 								this.state.customers ? this.state.customers.map(obj => {
-									return <Customer key={obj.id} customer={obj}/>
+									return <Customer key={obj.id} customer={obj} deleteCustomer={this.deleteCustomer}/>
 								}) :
 									<TableRow>
 										<TableCell colSpan="6" align="center">

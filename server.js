@@ -21,8 +21,8 @@ connection.connect();
 
 app.get('/api/getCustomers', (req, res) => {
 	connection.query(
-		"select * from CUSTOMER A order by id desc limit 10", (err, rows, fields) => {
-			console.dir(rows)
+		"select * from CUSTOMER A where A.isDeleted=0 order by id desc limit 10", (err, rows, fields) => {
+			// console.dir(rows)
 			res.send(rows);
 		}
 	)
@@ -41,13 +41,26 @@ app.post('/api/addCustomer', upload.single('image'), (req, res) => {
 	let fileName=req.body.fileName;
 	let params = [image, name, birthday, gender, job, fileName];
 
-	let sql = "insert into CUSTOMER (image, name, birthday, gender, job, file_name) values(?, ?, ?, ?, ?, ?)";
+	let sql = "insert into CUSTOMER (image, name, birthday, gender, job, fileName, createdDate) values(?, ?, ?, ?, ?, ?, now())";
 	connection.query(
 		sql, params,
 		(err, rows, fields) => {
-				console.dir(rows)
-				res.send(rows);
-			}
+			console.dir(rows)
+			res.send(rows);
+		}
+	)
+})
+
+app.delete('/api/customers/:id', (req, res) => {
+	let params=[req.params.id];
+	let sql = "update CUSTOMER set isDeleted=1, deletedTime=now() where id=?";
+	connection.query(
+		sql, params,
+		(err, rows, fields) => {
+			console.dir(err)
+			console.dir(rows)
+			res.send(rows);
+		}
 	)
 })
 
