@@ -86,7 +86,8 @@ class App extends Component{
 		super(props);
 		this.state = {
 			customers: null,
-			progressCount: 0
+			progressCount: 0,
+			searchKeyword: ''
 		}
 	}
 
@@ -122,9 +123,23 @@ class App extends Component{
 			this.refreshData()
 		);
 	}
+	handleValueChange = (e) => {
+		let nextState = {}
+		nextState[e.target.name] = e.target.value;
+		this.setState(nextState);
+	}
 	render() {
 		const { classes } = this.props;
 		const cellList = ["번호", "이미지", "이름", "생년월일", "성별", "직업", "설정"];
+
+		const filteredComponents = (data) => {
+			data = data.filter((c) => {
+				return c.name.indexOf(this.state.searchKeyword)>=0
+			});
+			return data.map( (obj) => {
+				return <Customer key={obj.id} customer={obj} deleteCustomer={this.deleteCustomer}/>
+			});
+		}
 		return (
 			<div className={classes.root}>
 				<AppBar position="static">
@@ -151,6 +166,9 @@ class App extends Component{
 									input: classes.inputInput,
 								}}
 								inputProps={{ 'aria-label': 'search' }}
+								name="searchKeyword"
+								value={this.state.searchKeyword}
+								onChange={this.handleValueChange}
 							/>
 						</div>
 					</Toolbar>
@@ -167,12 +185,12 @@ class App extends Component{
 						</TableHead>
 						<TableBody>
 							{
-								this.state.customers ? this.state.customers.map(obj => {
-									return <Customer key={obj.id} customer={obj} deleteCustomer={this.deleteCustomer}/>
-								}) :
+								this.state.customers ?
+									filteredComponents(this.state.customers) :
 									<TableRow>
 										<TableCell colSpan="6" align="center">
-											<CircularProgress className={styles.progress} variant="determinate" value={this.state.progressCount}/>
+											<CircularProgress className={styles.progress} variant="determinate"
+																				value={this.state.progressCount}/>
 										</TableCell>
 									</TableRow>
 							}
