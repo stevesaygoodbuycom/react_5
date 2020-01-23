@@ -40,11 +40,13 @@ app.post('/api/addCustomer', upload.single('image'), (req, res) => {
 	let job=req.body.job;
 	let fileName=req.body.fileName;
 	let params = [image, name, birthday, gender, job, fileName];
+	console.log('params=' + params);
 
-	let sql = "insert into CUSTOMER (image, name, birthday, gender, job, fileName, createdDate) values(?, ?, ?, ?, ?, ?, now())";
+	let sql = "insert into CUSTOMER (image, name, birthday, gender, job, fileName, createdTime) values(?, ?, ?, ?, ?, ?, now())";
 	connection.query(
 		sql, params,
 		(err, rows, fields) => {
+			console.log('err=' + err);
 			console.dir(rows)
 			res.send(rows);
 		}

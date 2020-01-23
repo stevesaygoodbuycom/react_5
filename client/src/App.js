@@ -41,9 +41,7 @@ class App extends Component{
 				this.setState({customers: res})
 			})
 			.catch(err => {
-				console.error('333333333333333333333333333333333333')
 				console.error(err)
-				console.error('333333333333333333333333333333333333')
 			});
 	}
 

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { TableRow, TableCell } from '@material-ui/core/'
+import CustomerDelete from "./CustomerDelete";
 
 class Customer extends Component {
 	render() {
@@ -11,7 +12,7 @@ class Customer extends Component {
 				<TableCell>{this.props.customer.birthday}</TableCell>
 				<TableCell>{this.props.customer.gender}</TableCell>
 				<TableCell>{this.props.customer.job}</TableCell>
-				<TableCell><button onClick={() => {this.props.deleteCustomer(this.props.customer.id)}}>삭제</button></TableCell>
+				<CustomerDelete deleteCustomer={this.props.deleteCustomer} id={this.props.customer.id}>삭제</CustomerDelete>
 			</TableRow>
 		);
 	}
