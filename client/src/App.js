@@ -18,7 +18,6 @@ const styles = theme => ({
 		margin: theme.spacing.uint * 3,
 	}
 })
-const customers = fetch('http://localhost:500/api/getCustomers');
 
 class App extends Component{
 	constructor(props) {
@@ -50,7 +49,6 @@ class App extends Component{
 		const { progressCount } = this.state;
 		this.setState({ completed: progressCount >= 100 ? 0 : progressCount + 1});
 	}
-
 	render() {
 		return (
 			<Paper className={styles.root}>
